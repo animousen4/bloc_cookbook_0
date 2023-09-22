@@ -1,5 +1,5 @@
-import 'package:bloc_cookbook_0/logic/bloc/item_bloc.dart';
 import 'package:bloc_cookbook_0/logic/model/item/short_item.dart';
+import 'package:bloc_cookbook_0/view/screen/extended_item/extended_item_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,18 +13,17 @@ class ShortItemWidget extends StatelessWidget {
       title: Text(shortItem.name),
       subtitle: Text(shortItem.description),
       leading: CircleAvatar(
-        child: Image.network(shortItem.imageUrl),
+        // !!!! we pass arg to backgroundImage, not to child!!!
+        backgroundImage: NetworkImage(shortItem.imageUrl),
       ),
       trailing: Text("ID: ${shortItem.id.toString()}"),
       onTap: () {
-
-        // context.read<T> - we are going up in a widget tree and searching instance of
-        // this object (T). In our case, it's a ItemBloc, which we pushed it to our tree upper
-        // with the help of BlocProvider.
-        
-        // We are creating a new event (OpenitemEvent) with add(EVENT(event_args...)) method and passing args to this event (id)
-        // Bloc will process this event and emit a state (or ignore, it depends on how we define the logic of bloc).
-        context.read<ItemBloc>().add(OpenItemEvent(shortItem.id));
+        // We should show a new screen with extended info of our item, by passing
+        // to this screen id.
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ExtendedItemScreen(
+                  id: shortItem.id,
+                )));
       },
     );
   }
